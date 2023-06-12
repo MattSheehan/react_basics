@@ -1,56 +1,57 @@
-import {Component} from "react";
+import {useState, useEffect} from "react";
+/* custom imports */
 import "./styles/App.css";
 import CardList from "./components/CardList/CardList.component";
 import SearchBox from "./components/SearchBox/SearchBox.component";
 import PageTitle from "./components/PageTitle/PageTitle.component";
+/* Global Variables - urls, strings, and other values I don't want to pass directly / re-render */
+const url = ("https://jsonplaceholder.typicode.com/users");
+const appTitle = ("M a d - T e a - S h o p");
+const searchTitle = ("P r o f i l e s");
+const searchHolder = ("search for users by entering their username...");
 
-export class App extends Component {
-  /* ReactDOM.constructor() --> Class Lifecycle method = first called and creates and initializes state. */
-  constructor() {
-    super();
-    this.state = {
-      user: [],
-      searchInput: ""
-    };
-  }
-  /* ReactDOM.componentDidMount(): --> Class Lifecycle method = Setting state here triggers ReactDom.render().
-   *  fetch(url) --> Request sent to the url"s API
-   *  then() --> Callback argument for the API Response
+const App = () => {
+  /* useState() --> "encapsulates local state of variable within your componenet." */
+  const [searchInput, setSearchInput] = useState("");
+  const [user, setUser] = useState([]);
+  const [filterUsers, setFilterUsers] = useState(user);
+  /* useEffect($arg1, $arg2) 
+   * useEffect( $arg1: callback(), $arg2: dependencies_array[...] (i.e., [state-variables, props]) )
+   * whenever a DEPENDENCY is changed, useEffect() calls the code within the callback()
+   * Leave the dependency array empty if you want to trigger the callback ONLY 1 time = when the component first mounts
   */
-  componentDidMount = () => {
-    const url = ("https://jsonplaceholder.typicode.com/users");
+  useEffect(() => {
     fetch(url)
-    .then((response) => response.json())
-    .then((users) => 
-      this.setState(() => {
-        return {user: users}; 
-      })
-    )
-  }
-  /* onSearchChange(event) --> Private Class method = takes in event, returns instance of the state object matching event */
-  onSearchChange = (event) => {
-    const searchInput = event.target.value.toLowerCase();
-    this.setState(() => {
-      return { searchInput };
+      .then((response) => response.json())
+      .then((users) => setUser(users));
+  }, []);
+  useEffect(() => {
+    const newFilteredUser = user.filter((user) => {
+      return user.username.toLocaleLowerCase().includes(searchInput);
     });
-  }
-  /* ReactDOM.render() --> Class method passes (JavaScript + HTML + CSS) casted as HTML, inside <root> element. */
-  render = () => {
-    const { user, searchInput } = this.state;
-    const { onSearchChange } = this;
-    const filterUsers = user.filter((user) => {
-      return (user.username.toLowerCase().includes(searchInput));
-    });
-    return (
-      <div className="App">
-        <div className="App-header">
-          <PageTitle title={"M a d - T e a - S h o p"}/>
-        </div>
-        <div className="App-header">
-          <SearchBox onChangeHandler={onSearchChange} placeholder={"search users"} searchTitle={"P r o f i l e s"}/>
-          <CardList user={filterUsers}/>
-        </div>
-      </div>
-    );
+    setFilterUsers(newFilteredUser);
+  }, [user, searchInput]);
+  /* onSearchChange(event) --> returns array = [1: {value we want to store}, 2: {value after typing into search bar}] */
+  const onSearchChange = (event) => {
+    const activeInput = event.target.value.toLowerCase();
+    setSearchInput(activeInput);
   };
-}
+  /* return (JavaScript + HTML + CSS) casted as HTML */
+  return (
+    <div className="App">
+      <div className="App-header">
+        <PageTitle title={appTitle}/>
+      </div>
+      <div className="App-header">
+        <SearchBox 
+          onChangeHandler={onSearchChange} 
+          placeholder={searchHolder} 
+          searchTitle={searchTitle}
+        />
+        <CardList user={filterUsers}/>
+      </div>
+    </div>
+  );
+};
+// export file's reusable or renderable components
+export default (App);

@@ -1,5 +1,5 @@
 .UserCard-container {
-    width: 320px;
+    width: auto;
     height: auto;
     display: flex;
     flex-direction: column;
@@ -52,7 +52,7 @@
 }
 .UserCard-body-text {
     color: #ffffff!important;
-    font-size: calc(14px + 1vmin);
+    font-size: calc(14px + 0vmin);
 }
 
 .UserCard-link {

@@ -14,7 +14,7 @@ html, body {
 
 .tb {
   display: table;
-  width: auto
+  width: 100%;
 }
 
 .td {
@@ -43,12 +43,13 @@ input, button {
 input[type="search"] {
   width: 100%;
   height: 96px;
-  font-size: 60px;
+  font-size: 44px;
   line-height: 1;
 }
 
 input[type="search"]::placeholder {
   color: #f3f3f3;
+  width: 100%;
 }
 
 button span {
@@ -80,7 +81,7 @@ button span:before, button span:after {
 #cover {
   left: 0;
   right: 0;
-  width: 600px;
+  width: 80vw;
   padding: 35px;
   margin: -83px auto 0 auto;
   background-color: #535e72;
@@ -92,10 +93,12 @@ button span:before, button span:after {
 form {
   height: 96px;
 }
-
+#b-cover {
+  width: 90%;
+}
 #s-cover {
-  width: 1px;
-  padding-left: 35px;
+  width: 10%;
+  padding-left: auto;
 }
 
 #s-circle {
